@@ -1,5 +1,7 @@
 # The data models correspond to database tables.
 # The data models will inherit from the Base class, which was the return value of the declarative base function.
+from sqlalchemy.orm import relationship
+
 from database import Base
 from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
 
@@ -16,6 +18,11 @@ class User(Base):
     hashed_password = Column(String)
     is_active = Column(Boolean, default=True)
     role = Column(String)
+
+    # Stating that the user has a relationship with the To Do model.
+    # Back populates specifies the name of the corresponding attribugte in the To Do model.
+    todos = relationship("ToDo", back_populates="owner")
+    address = relationship("Address", back_populates="user_address")
 
 
 class ToDo(Base):
@@ -40,3 +47,20 @@ class ToDo(Base):
     description = Column(String)
     priority = Column(Integer)
     complete = Column(Boolean, default=False)
+
+    owner = relationship("User", back_populates="todos")
+
+
+class Address(Base):
+    # Bad table design to begin with...
+    __tablename__ = "addresses"
+    id = Column(Integer, primary_key=True, index=True)
+    address1 = Column(String)
+    address2 = Column(String)
+    city = Column(String)
+    state = Column(String)
+    country = Column(String)
+    postal_code = Column(String)
+
+    user_address = relationship("User", back_populates="address")
+
