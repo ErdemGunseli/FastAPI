@@ -3,6 +3,7 @@ from typing import Annotated
 from sqlalchemy.orm import Session
 from database import SessionLocal
 
+
 # The following is a generator function - a special function that uses the yield keyword instead of return.
 # Typically, generators are used to create iterators which produce a series of values,
 # used in scenarios where it is necessary to generate a sequence of values dynamically,
@@ -44,6 +45,4 @@ def get_db():
 
 # Session, imported from SQLAlchemy is the type of the dependency, i.e. the type of db.
 db_dependency = Annotated[Session, Depends(get_db)]
-
-
 

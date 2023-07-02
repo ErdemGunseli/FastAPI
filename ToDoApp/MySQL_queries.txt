@@ -1,0 +1,38 @@
+-- This file is only for storing the MySQL queries used in case they are needed:
+
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS todos;
+
+-- Use of quoted identifiers is optional in both languages, but MySQL uses ' ' whereas PostgreSQL uses " ".
+
+CREATE TABLE users (
+    /*
+        Use INT AUTO_INCREMENT for auto incrementing column (equivalent to SERIAL in PostgreSQL)
+        The primary key can be declared in-line with the attribute, or separately like in PostgreSQL
+        using PRIMARY KEY(field_name).
+    */
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(200),
+    username VARCHAR(50),
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    hashed_password VARCHAR(200),
+    is_active BOOLEAN,
+    role VARCHAR(50)
+    /*
+    InnoDB is a popular storage engine for MySQL
+    AUTO_INCREMENT=1 means the first ID is 1
+    latin1 is the default character set
+    */
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
+
+CREATE TABLE todos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(200),
+    description VARCHAR(300),
+    priority INT,
+    complete BOOLEAN,
+    owner_id INT,
+    -- Specify FOREIGN KEY constraint separately (same as PostgreSQL)
+    FOREIGN KEY (owner_id) REFERENCES users(id)
+)ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;

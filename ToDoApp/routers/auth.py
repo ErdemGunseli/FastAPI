@@ -14,7 +14,7 @@ from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 # Router is a way of combining FastAPI applications - we can have a main application,
 # and several sub-applications that are combined.
 # The prefix kwarg means that all routes defined in this router will have "/auth" prefix appended to their path.
-# For example, "/create_user" becomes "/auth/create_user":
+# For "create_user" becomes "/auth/create_user":
 # The tags kwarg is used to group the routes in the documentation.
 # SwaggerUI will group endpoints within a router using the tag name.
 router = APIRouter(prefix="/auth", tags=["auth"])
@@ -64,14 +64,14 @@ def authenticate_user(username: str, password: str, db):
 # This function generates a Json Web Token used for secure information exchange between the client and server.
 # We want to include the username and user ID within the token.
 
-def create_access_token(user_id: int, username: str, expires_delta: timedelta):
+def create_access_token(id: int, username: str, role: str, expires_delta: timedelta):
     # The time at which the token expires is the current time plus time to live:
     expires = datetime.utcnow() + expires_delta
 
     # The payload is the data that we want to encode within the token.
     # This is so that the server can understand which user is making the requests.
     # "sub" stands for subject, and is the user that the token is for.
-    payload = {"sub": username, "user_id": user_id, "exp": expires}
+    payload = {"sub": username, "id": id, "exp": expires, "role": role}
 
     # Creating the JWT, using the secret key and algorithm to encode the payload:
     return jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
@@ -87,15 +87,17 @@ async def get_current_user(token: token_dependency):
         # Extracting the username and user ID from the payload dictionary:
         username: Optional[str] = payload.get("sub")
         user_id: Optional[int] = payload.get("id")
+        role: Optional[str] = payload.get("role")
 
     # If the decoding fails for any reason, it would raise this error, so catching it:
     except JWTError:
         username = None
         user_id = None
+        role = None
 
-    if None in (username, user_id):
+    if None in (username, user_id, role):
         raise HTTPException(status_code=st.HTTP_401_UNAUTHORIZED, detail="Invalid Credentials")
-    return {"username": username, "id": user_id}
+    return {"username": username, "id": user_id, "role": role}
 
 
 @router.post("/create_user", status_code=st.HTTP_201_CREATED)
@@ -144,7 +146,7 @@ async def login_for_access_token(form_data: auth_dependency, db: db_dependency):
     user = authenticate_user(form_data.username, form_data.password, db)
 
     if user is not None:
-        token = create_access_token(user.id, user.username, TOKEN_TTL)
+        token = create_access_token(user.id, user.username, user.role, TOKEN_TTL)
         # This convention for the return value is used due to the OAUTH2.0 Bearer Token Specification.
         # Bearer indicates a request should be authenticated by the provided access token
         # i.e. it is a hint about how to use the token.

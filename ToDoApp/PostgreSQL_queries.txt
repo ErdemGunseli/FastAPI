@@ -1,0 +1,46 @@
+-- This file is only for storing the PostgreSQL queries used in case they are needed:
+/*
+	SQL Syntax:
+	1) Use lowercase for identifiers
+	2) Do not use double quotes when creating tables, columns, etc.
+	3) Use uppercase for everything else
+
+	->  The default value is NULL, so technically,
+		it is not necessary to have DEFAULT NULL for each field.
+*/
+
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS todos;
+
+CREATE TABLE users (
+	-- 'SERIAL' means that the column is an autoincrementing integer
+	-- DEFAULT NULL means that the default value of the attribute is NULL
+	id SERIAL,
+	email VARCHAR(200) DEFAULT NULL,
+	username VARCHAR(50) DEFAULT NULL,
+	first_name VARCHAR(50) DEFAULT NULL,
+	last_name VARCHAR(50) DEFAULT NULL,
+	hashed_password VARCHAR(200) DEFAULT NULL,
+	is_active BOOLEAN DEFAULT NULL,
+	/*
+	'role' is a keyword in PostgreSQL, hence it is highlighted.
+	It is not a reserved keyword, meaning this query will work,
+	but it should be avoided in the future.
+	*/
+	role VARCHAR(50) DEFAULT NULL,
+	-- 'SERIAL' does not make the field a primary key.
+	-- Explicitly setting the primary key as the ID:
+	PRIMARY KEY(id)
+);
+
+CREATE TABLE todos (
+	id SERIAL,
+	title VARCHAR(200) DEFAULT NULL,
+	description VARCHAR(300) DEFAULT NULL,
+	priority INTEGER DEFAULT NULL,
+	complete BOOLEAN DEFAULT NULL,
+	owner_id INTEGER DEFAULT NULL,
+	PRIMARY KEY(id),
+	-- Our foreign key of owner_id references the id field of users
+	FOREIGN KEY (owner_id) REFERENCES users(id)
+);
