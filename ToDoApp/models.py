@@ -18,9 +18,11 @@ class User(Base):
     hashed_password = Column(String)
     is_active = Column(Boolean, default=True)
     role = Column(String)
+    phone_number = Column(String)
+    address_id = Column(Integer, ForeignKey("addresses.id"), nullable=True)
 
     # Stating that the user has a relationship with the To Do model.
-    # Back populates specifies the name of the corresponding attribugte in the To Do model.
+    # Back populates specifies the name of the corresponding attribute in the To Do model.
     todos = relationship("ToDo", back_populates="owner")
     address = relationship("Address", back_populates="user_address")
 
@@ -61,6 +63,7 @@ class Address(Base):
     state = Column(String)
     country = Column(String)
     postal_code = Column(String)
+    apt_num = Column(String)
 
     user_address = relationship("User", back_populates="address")
 

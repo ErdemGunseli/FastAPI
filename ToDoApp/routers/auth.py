@@ -45,6 +45,7 @@ class CreateUserRequest(BaseModel):
     # The request password will not be hashed yet:
     password: str
     role: str
+    phone_number: str
 
 
 class Token(BaseModel):
@@ -112,7 +113,9 @@ async def create_user(create_user_request: CreateUserRequest, db: db_dependency)
                 # Hashing the user request password:
                 hashed_password=bcrypt_context.hash(create_user_request.password),
                 is_active=True,
-                role=create_user_request.role)
+                role=create_user_request.role,
+                phone_number=create_user_request.phone_number
+                )
 
     # Saving the user to the database:
     db.add(user)

@@ -6,7 +6,7 @@ from alembic import context
 
 # Need to import our models to the alembic environment:
 import models
-sys.path.append("...")
+sys.path.append("..")
 
 
 # this is the Alembic Config object, which provides
