@@ -66,4 +66,3 @@ class Address(Base):
     apt_num = Column(String)
 
     user_address = relationship("User", back_populates="address")
-

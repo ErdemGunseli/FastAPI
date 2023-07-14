@@ -146,6 +146,7 @@ async def create_user(create_user_request: CreateUserRequest, db: db_dependency)
 # Response model specifies that the returned data should be in the form of the Token model:
 @router.post("/token", status_code=st.HTTP_200_OK, response_model=Token)
 async def login_for_access_token(form_data: auth_dependency, db: db_dependency):
+    # OAuth2PasswordRequestForm has the username and password attributes, and form_data is an instance of this class.
     user = authenticate_user(form_data.username, form_data.password, db)
 
     if user is not None:
