@@ -20,7 +20,7 @@ from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 # A JWT needs an algorithm and secret key:
-# Secret key should be a random string. This was generated using opensl rand -hex 32:
+# Secret key should be a random string. This was generated using openssl rand -hex 32:
 SECRET_KEY = "4a1221568c7bee38337d142b1d3033e8ca513f1a74411c65cc787889037ac2cd"
 ALGORITHM = "HS256"
 # The time to live for the JWT:

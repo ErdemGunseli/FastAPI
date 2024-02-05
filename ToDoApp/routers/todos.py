@@ -72,7 +72,7 @@ async def update_todo(db: db_dependency, user: user_dependency, todo_request: To
 
     # This is not adding a new record, but updating the existing one
     # since we assigned the return value of the initial query to this variable:
-    db.add(todo)
+    # No need for db.add(todo)
     db.commit()
 
 
